@@ -32,12 +32,6 @@ mod dd;
 
 pub use dd::DdSimulator;
 
-pub fn create_simulator(_method: &str) -> Box<dyn KeySimulator> {
-    match DdSimulator::new() {
-        Ok(s) => Box::new(s),
-        Err(e) => {
-            eprintln!("[错误] 初始化 DD 驱动失败: {:?}", e);
-            std::process::exit(1);
-        }
-    }
+pub fn create_simulator(_method: &str) -> Result<Box<dyn KeySimulator>> {
+    Ok(Box::new(DdSimulator::new()?))
 }
