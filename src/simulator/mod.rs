@@ -7,10 +7,10 @@ pub enum KeyCode {
 
 impl KeyCode {
     /// DD 驱动自定义键码
-    /// Z 在 DD 键码表中是 404（第 4 行第 4 列）
+    /// Z 在 DD HID 版键码表中是 501
     pub fn dd_code(self) -> i32 {
         match self {
-            KeyCode::Z => 404,
+            KeyCode::Z => 501,
         }
     }
 }
