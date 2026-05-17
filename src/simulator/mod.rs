@@ -32,18 +32,18 @@ pub trait KeySimulator {
     fn name(&self) -> &str;
 }
 
-mod send_input;
-mod scan_code;
-mod keybd_event;
+mod post_message;
+mod hook;
+mod interception;
 
-pub use send_input::SendInputSimulator;
-pub use scan_code::ScanCodeSimulator;
-pub use keybd_event::KeybdEventSimulator;
+pub use post_message::PostMessageSimulator;
+pub use hook::HookSimulator;
+pub use interception::InterceptionSimulator;
 
 pub fn create_simulator(method: &str) -> Box<dyn KeySimulator> {
     match method {
-        "scan_code" => Box::new(ScanCodeSimulator),
-        "keybd_event" => Box::new(KeybdEventSimulator),
-        _ => Box::new(SendInputSimulator),
+        "hook" => Box::new(HookSimulator),
+        "interception" => Box::new(InterceptionSimulator::new()),
+        _ => Box::new(PostMessageSimulator),
     }
 }
