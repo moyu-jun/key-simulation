@@ -6,21 +6,11 @@ pub enum KeyCode {
 }
 
 impl KeyCode {
-    pub fn virtual_key(self) -> u16 {
+    /// DD 驱动自定义键码
+    /// Z 在 DD 键码表中是 404（第 4 行第 4 列）
+    pub fn dd_code(self) -> i32 {
         match self {
-            KeyCode::Z => 0x5A,
-        }
-    }
-
-    pub fn scan_code(self) -> u16 {
-        match self {
-            KeyCode::Z => 0x2C,
-        }
-    }
-
-    pub fn unicode_char(self) -> u16 {
-        match self {
-            KeyCode::Z => 'z' as u16,
+            KeyCode::Z => 404,
         }
     }
 }
@@ -38,15 +28,16 @@ pub trait KeySimulator {
     fn name(&self) -> &str;
 }
 
-mod pynput_vk;
-mod pynput_unicode;
+mod dd;
 
-pub use pynput_vk::PynputVkSimulator;
-pub use pynput_unicode::PynputUnicodeSimulator;
+pub use dd::DdSimulator;
 
-pub fn create_simulator(method: &str) -> Box<dyn KeySimulator> {
-    match method {
-        "unicode" => Box::new(PynputUnicodeSimulator),
-        _ => Box::new(PynputVkSimulator),
+pub fn create_simulator(_method: &str) -> Box<dyn KeySimulator> {
+    match DdSimulator::new() {
+        Ok(s) => Box::new(s),
+        Err(e) => {
+            eprintln!("[错误] 初始化 DD 驱动失败: {:?}", e);
+            std::process::exit(1);
+        }
     }
 }
