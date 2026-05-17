@@ -6,11 +6,10 @@ pub enum KeyCode {
 }
 
 impl KeyCode {
-    /// DD 驱动自定义键码
-    /// Z 在 DD HID 版键码表中是 501
-    pub fn dd_code(self) -> i32 {
+    /// PS/2 Set 1 硬件扫描码（Interception 使用此编码）
+    pub fn scan_code(self) -> u16 {
         match self {
-            KeyCode::Z => 501,
+            KeyCode::Z => 0x2C,
         }
     }
 }
@@ -28,10 +27,10 @@ pub trait KeySimulator {
     fn name(&self) -> &str;
 }
 
-mod dd;
+mod interception;
 
-pub use dd::DdSimulator;
+pub use interception::InterceptionSimulator;
 
 pub fn create_simulator(_method: &str) -> Result<Box<dyn KeySimulator>> {
-    Ok(Box::new(DdSimulator::new()?))
+    Ok(Box::new(InterceptionSimulator::new()?))
 }
