@@ -5,7 +5,6 @@ edition = "2024"
 
 [dependencies]
 anyhow = "1"
-libloading = "0.8"
 
 [dependencies.windows]
 version = "0.58"

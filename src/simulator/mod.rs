@@ -17,6 +17,12 @@ impl KeyCode {
             KeyCode::Z => 0x2C,
         }
     }
+
+    pub fn unicode_char(self) -> u16 {
+        match self {
+            KeyCode::Z => 'z' as u16,
+        }
+    }
 }
 
 pub trait KeySimulator {
@@ -32,18 +38,15 @@ pub trait KeySimulator {
     fn name(&self) -> &str;
 }
 
-mod post_message;
-mod hook;
-mod interception;
+mod pynput_vk;
+mod pynput_unicode;
 
-pub use post_message::PostMessageSimulator;
-pub use hook::HookSimulator;
-pub use interception::InterceptionSimulator;
+pub use pynput_vk::PynputVkSimulator;
+pub use pynput_unicode::PynputUnicodeSimulator;
 
 pub fn create_simulator(method: &str) -> Box<dyn KeySimulator> {
     match method {
-        "hook" => Box::new(HookSimulator),
-        "interception" => Box::new(InterceptionSimulator::new()),
-        _ => Box::new(PostMessageSimulator),
+        "unicode" => Box::new(PynputUnicodeSimulator),
+        _ => Box::new(PynputVkSimulator),
     }
 }

@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "mcp__plugin_ecc_sequential-thinking__sequentialthinking",
-      "Bash(cargo build *)"
+      "Bash(cargo build *)",
+      "mcp__plugin_ecc_exa__web_search_exa"
     ]
   }
 }

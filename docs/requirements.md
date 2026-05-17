@@ -123,10 +123,29 @@ build.rs                 # 编译脚本，嵌入 manifest
 | `SendInput`（虚拟键码） | 正常生效 | 无效 | 被游戏屏蔽 |
 | `ScanCode`（硬件扫描码） | 正常生效 | 无效 | 被游戏屏蔽 |
 | `keybd_event`（旧版 API） | 正常生效 | 无效 | 被游戏屏蔽 |
+| `PostMessage`（窗口消息） | 正常生效 | 无效 | 被游戏屏蔽 |
+| `Hook`（WH_KEYBOARD_LL + ScanCode） | 正常生效 | 无效 | 被游戏屏蔽 |
+| `Interception`（驱动级） | 无效 | 无效 | DLL 已加载但未生效（见下方分析） |
 
 测试条件：管理员权限启动，Windows 10。
 
-结论：用户态 Win32 API 层面的按键模拟均被游戏反作弊机制屏蔽，需要尝试更底层的方案。
+结论：所有用户态方案均被游戏屏蔽。Interception 方案 DLL 可加载但输入未生效，原因分析如下。
+
+### Interception 不生效原因分析
+
+**核心问题：仅有 DLL 不够，必须安装内核驱动。**
+
+`interception.dll` 只是用户态接口库，实际的键盘输入注入由内核驱动 `keyboard.sys`（Interception 驱动）完成。如果驱动未安装：
+- `interception_create_context()` 会返回一个看似有效的句柄
+- `interception_send()` 调用不会报错，但实际无数据发送到输入栈
+- 程序表现为"能启动但无效果"
+
+### 解决步骤
+
+1. 从 https://github.com/oblitum/Interception/releases 下载 **Interception 安装包**
+2. 以管理员身份运行：`install-interception.exe /install`
+3. **重启系统**（驱动需要重启后生效）
+4. 重启后再运行 `key-simulation.exe --method interception`
 
 ## 验收标准
 

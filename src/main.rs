@@ -9,7 +9,7 @@ fn main() {
     let method = std::env::args()
         .skip_while(|a| a != "--method")
         .nth(1)
-        .unwrap_or_else(|| "post_message".to_string());
+        .unwrap_or_else(|| "pynput_vk".to_string());
 
     let sim = create_simulator(&method);
     let mut listener = HotkeyListener::new();
@@ -19,7 +19,7 @@ fn main() {
 
     println!("=== 按键模拟工具 ===");
     println!("当前方案: {}", sim.name());
-    println!("可用方案: post_message, hook, interception");
+    println!("可用方案: pynput_vk, unicode");
     println!("按 F10 启动/停止模拟（每 1000ms 模拟 Z 键）");
     println!("按 Ctrl+C 退出程序");
 
