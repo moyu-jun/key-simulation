@@ -18,7 +18,7 @@ fn main() {
     logger::init();
 
     log_msg!("初始化按键模拟器...");
-    let sim = match create_simulator("") {
+    let sim = match create_simulator() {
         Ok(s) => {
             log_msg!("模拟器初始化成功: {}", s.name());
             s
